@@ -1,4 +1,28 @@
 'use strict';
+// 加载用户模型 db
+const fs = require('fs');
+const  path = require('path');
+const  mongoose = require('mongoose');
+const db = 'mongodb://localhost/86links-db';
+mongoose.Promise = require('bluebird');
+mongoose.connect(db);
+const modules_path = path.join(__dirname, '/app/model');
+
+function walk(modelPath) {
+    fs.readdirSync(modelPath)
+    .forEach(file => {
+        let filePath = path.join(modelPath, '/'+ file);
+        let stat = fs.statSync(filePath);
+        if(stat.isFile()) {
+            if(/\(.*)\.(js|coffee)/.test(file)) {
+                require(filePath);
+            }
+        }else if(stat.isDirectory()){
+            walk(filePath)
+        }
+    })
+}
+walk(modules_path);
 
 var koa = require('koa');
 var logger = require('koa-logger');
