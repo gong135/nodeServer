@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   areaCode: String,
   verifyCode: String, // 验证码
   accessToken: String,
-  nickName: Stirng,
+  nickName: String,
   gender: String,
   age: String,
   avatar: String,

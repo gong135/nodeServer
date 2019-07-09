@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const User = require('../controller/user');
+const User = require('../app/controller/user');
 module.exports = function() {
   let router = new Router({
     perfix: '/', //项目前缀

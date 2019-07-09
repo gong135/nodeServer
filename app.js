@@ -3,18 +3,26 @@
 const fs = require('fs');
 const  path = require('path');
 const  mongoose = require('mongoose');
-const db = 'mongodb://localhost/86links-db';
+const db = 'mongodb://localhost/86links';
 mongoose.Promise = require('bluebird');
-mongoose.connect(db);
+const res = mongoose.connect(db,{ useNewUrlParser: true,useCreateIndex: true  })
+//如果连接成功会执行error回调
+mongoose.connection.on("error", function (error) {
+    console.log("数据库连接失败：" + error);
+})
+//如果连接成功会执行open回调
+mongoose.connection.on("open", function () {
+    console.log("数据库连接成功");
+});
+// require('./app/model/user');
 const modules_path = path.join(__dirname, '/app/model');
-
 function walk(modelPath) {
     fs.readdirSync(modelPath)
     .forEach(file => {
         let filePath = path.join(modelPath, '/'+ file);
         let stat = fs.statSync(filePath);
         if(stat.isFile()) {
-            if(/\(.*)\.(js|coffee)/.test(file)) {
+            if(/\.*\.(js|coffee)/.test(file)) {
                 require(filePath);
             }
         }else if(stat.isDirectory()){
