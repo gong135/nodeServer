@@ -4,12 +4,8 @@ module.exports = function() {
   let router = new Router({
     perfix: '/', //项目前缀
   });
-  router.get('/user/signup', User.signup);
-  router.get('/hello/:name', (ctx, next) => {
-    var name = ctx.params.name;
-    ctx.response.body = `<h1>Hello, ${name}!</h1>`;
-})
-  router.post('/user/verify', User.signup);
-  router.post('/user/update', User.signup);
+  router.get('/user/get', User.savePhone);
+  router.post('/user/getInfo', User.getInfo);
+  router.post('/user/signup', User.signup);
   return router;
 };

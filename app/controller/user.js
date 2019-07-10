@@ -3,20 +3,16 @@ const User = mongoose.model('User');
 const xss = require('xss');
 
 const Controller = {
-  async signup(ctx) {
+  async savePhone(ctx) {
     const phone = ctx.query.phone;
     let user = await User.findOne({ phone }).exec(); //这个就是一个 promise exec
+    console.log(user);
     if (!user) {
       user = new User({ phone: xss(phone) });
-    } else {
-      user.verifyCode = '1231';
     }
-
     try {
-      console.log('try');
       user = user.save();
     } catch (error) {
-      console.log('err');
       ctx.body = {
         error,
       };
@@ -32,5 +28,17 @@ const Controller = {
       success: 'get Something',
     };
   },
+  async getInfo(ctx) {
+    const name = ctx.params.name;
+    ctx.body = {
+      success: true,
+    }
+  },
+  async signup(ctx) {
+    const name = ctx.params.name;
+    ctx.body = {
+      success: true,
+    }
+  }
 };
 module.exports = Controller;

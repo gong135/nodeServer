@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   // 电话登录
-  phoneNumber: {
+  phone: {
     unique: true, //唯一
     type: String,
   },
