@@ -6,7 +6,6 @@ const Controller = {
   async savePhone(ctx) {
     const phone = ctx.query.phone;
     let user = await User.findOne({ phone }).exec(); //这个就是一个 promise exec
-    console.log(user);
     if (!user) {
       user = new User({ phone: xss(phone) });
     }
