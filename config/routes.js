@@ -4,9 +4,12 @@ module.exports = function() {
   let router = new Router({
     perfix: '/', //项目前缀
   });
-  router.post('/user/login', User.signin); //登录
-  router.post('/user/logout', User.signup); //登出
-  router.post('/user/signup', User.signup);  // 注册
-  router.get('/user/info', User.getInfo);
+  router.get('/user/signup', User.signup);
+  router.get('/hello/:name', (ctx, next) => {
+    var name = ctx.params.name;
+    ctx.response.body = `<h1>Hello, ${name}!</h1>`;
+})
+  router.post('/user/verify', User.signup);
+  router.post('/user/update', User.signup);
   return router;
 };

@@ -2,12 +2,10 @@
 const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   // 电话登录
-  userName: {
+  phoneNumber: {
     unique: true, //唯一
     type: String,
   },
-  password: String,
-  phone: String,
   areaCode: String,
   verifyCode: String, // 验证码
   accessToken: String,
@@ -27,13 +25,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre('save', function(next) {
-  if (this.isNew) {
-    this.meta.createAt = this.meta.updateAt = Date.now();
-  } else {
-    this.meta.updateAt = Date.now();
-  }
-  next();
+userSchema.pre('save', function(next){
+    if(!this.isNew) {
+        this.mata.updateAt = Date.now();
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);
