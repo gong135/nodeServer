@@ -29,26 +29,28 @@ const Controller = {
         message: '用户登录过期！',
         error: 401,
       };
+      return;
     }
-    let fields = 'avatar, gender, age, nickName'.split(',');
+    let fields = ['avatar', 'gender', 'age', 'nickName'];
     fields.forEach(el => {
-      if (ctx.request.body[el]) user[el] = ctx.request.body[el];
+      console.log(ctx.request.body[el]);
+      if (ctx.request.body[el]) {
+        user[el] = ctx.request.body[el];
+      }
     });
-    user = await user.save(user, function(err, res) {
-      if (err) {
-        console.log(err.errmsg);
-        ctx.body ={
-          success: false,
-          message: '更新失败',
-          code: 512,
-        }
-      }
-      if (res) {
-        ctx.body ={
-          success: true,
-        }
-      }
-    })
+    console.log(user);
+    try {
+      user = await user.save();
+    } catch (error) {
+      ctx.body = {
+        message: '用户更新失败',
+        error: 513,
+      };
+    }
+    ctx.body = {
+      message: '用户更新成功',
+      success: true,
+    };
   },
   async signup(ctx, next) {
     let { userName, password } = ctx.request.body;
@@ -64,13 +66,7 @@ const Controller = {
           'https://i1.hdslb.com/bfs/face/a809a3b8407840ae00032360108261fcf503d38a.jpg@52w_52h.webp',
       });
       try {
-        user = await user.save(user, function(err, res) {
-          if (err) {
-            console.log('失败');
-            console.log(err.errmsg);
-          }
-          if (res) console.log('第一次新增成功：' + res);
-        });
+        user = await user.save();
       } catch (error) {
         ctx.body = {
           message: error,
@@ -85,6 +81,12 @@ const Controller = {
         },
       };
     }
+    ctx.body = {
+      result: {
+        message: '注册成功',
+        success: true,
+      },
+    };
   },
   async login(ctx, next) {
     await next();
