@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
   },
   areaCode: String,
   verifyCode: String, // 验证码
+  verified: {
+    type:Boolean,
+    default: false,
+  },
   accessToken: String,
   nickName: String,
   gender: String,
