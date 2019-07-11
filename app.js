@@ -17,6 +17,9 @@ mongoose.connection.on('error', function(error) {
 mongoose.connection.on('open', function() {
   console.log('数据库连接成功');
 });
+mongoose.connection.on('disconnected', function() {
+  console.log('数据库连接断开');
+});
 // require('./app/model/user');
 const modules_path = path.join(__dirname, '/app/model');
 function walk(modelPath) {
@@ -55,7 +58,13 @@ app.use(
     app,
   ),
 );
-app.use(bodyParser());
+app.use(
+  bodyParser({
+    extendTypes: {
+      json: ['application/json'],
+    },
+  }),
+);
 
 var router = require('./config/routes')();
 

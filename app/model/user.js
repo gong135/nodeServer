@@ -2,8 +2,14 @@
 const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   // 电话登录
+  userName: {
+    // unique: true, //唯一 这个东西使用了，这个数据库就这个 1 个数据了
+    type: String,
+  },
+  password: {
+    type: String,
+  },
   phone: {
-    unique: true, //唯一
     type: String,
   },
   areaCode: String,
