@@ -24,12 +24,31 @@ const Controller = {
     let user = await User.findOne({
       accessToken,
     }).exec();
-    if(!user) {
+    if (!user) {
       ctx.body = {
         message: '用户登录过期！',
         error: 401,
-      }
+      };
     }
+    let fields = 'avatar, gender, age, nickName'.split(',');
+    fields.forEach(el => {
+      if (ctx.request.body[el]) user[el] = ctx.request.body[el];
+    });
+    user = await user.save(user, function(err, res) {
+      if (err) {
+        console.log(err.errmsg);
+        ctx.body ={
+          success: false,
+          message: '更新失败',
+          code: 512,
+        }
+      }
+      if (res) {
+        ctx.body ={
+          success: true,
+        }
+      }
+    })
   },
   async signup(ctx, next) {
     let { userName, password } = ctx.request.body;
