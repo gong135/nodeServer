@@ -23,10 +23,16 @@ const Controller = {
     };
   },
   async updateUser(ctx, next) {
-    let { accessToken } = ctx.request.body;
+    // let { accessToken } = ctx.request.body;
+    // const accpectToken
+    const raw = ctx.request.headers.authorization.split(' ').pop();
+    const tokenData = jwt.verify(raw, secretKey);
+    console.log(tokenData);
+    console.log(tokenData._id);
     let user = await User.findOne({
-      accessToken,
+      _id: tokenData._id,
     }).exec();
+    console.log(user);
     if (!user) {
       ctx.body = {
         message: '用户登录过期！',
@@ -36,12 +42,10 @@ const Controller = {
     }
     let fields = ['avatar', 'gender', 'age', 'nickName'];
     fields.forEach(el => {
-      console.log(ctx.request.body[el]);
       if (ctx.request.body[el]) {
         user[el] = ctx.request.body[el];
       }
     });
-    console.log(user);
     try {
       user = await user.save();
     } catch (error) {
@@ -129,7 +133,7 @@ const Controller = {
       ); // 一般处理  第一个用户 id， 第二个加密key , 第三个
       ctx.body = {
         result: {
-          accessToken: user.accessToken,
+          token: `Bearer ${token}`,
         },
         message: '登录成功',
         success: true,
