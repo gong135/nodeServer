@@ -23,37 +23,42 @@ const Controller = {
     };
   },
   async updateUser(ctx, next) {
-    // let { accessToken } = ctx.request.body;
-    // const accpectToken
-    const raw = ctx.request.headers.authorization.split(' ').pop();
-    const tokenData = jwt.verify(raw, secretKey);
-    console.log(tokenData);
-    console.log(tokenData._id);
-    let user = await User.findOne({
-      _id: tokenData._id,
-    }).exec();
-    console.log(user);
-    if (!user) {
-      ctx.body = {
-        message: '用户登录过期！',
-        error: 401,
-      };
-      return;
-    }
-    let fields = ['avatar', 'gender', 'age', 'nickName'];
-    fields.forEach(el => {
-      if (ctx.request.body[el]) {
-        user[el] = ctx.request.body[el];
-      }
-    });
-    try {
-      user = await user.save();
-    } catch (error) {
-      ctx.body = {
-        message: '用户更新失败',
-        error: 513,
-      };
-    }
+   
+    // const raw = ctx.request.headers.authorization.split(' ').pop();
+    // let tokenData;
+    // try {
+    //   tokenData = jwt.verify(raw, secretKey);
+    // } catch (error) {
+    //   ctx.body = {
+    //     message: error,
+    //     error: 401,
+    //   };
+    //   return;
+    // }
+    // let user = await User.findOne({
+    //   _id: tokenData._id,
+    // }).exec();
+    // if (!user) {
+    //   ctx.body = {
+    //     message: '用户登录过期！',
+    //     error: 401,
+    //   };
+    //   return;
+    // }
+    // let fields = ['avatar', 'gender', 'age', 'nickName'];
+    // fields.forEach(el => {
+    //   if (ctx.request.body[el]) {
+    //     user[el] = ctx.request.body[el];
+    //   }
+    // });
+    // try {
+    //   user = await user.save();
+    // } catch (error) {
+    //   ctx.body = {
+    //     message: '用户更新失败',
+    //     error: 513,
+    //   };
+    // }
     ctx.body = {
       message: '用户更新成功',
       success: true,
