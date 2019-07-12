@@ -114,11 +114,14 @@ const Controller = {
     if(!isPasswordVaild) {
       ctx.body ={
         message: '密码不正确',
-        code: 414,
+        code: 422,
       }
       return;
     } else {
       ctx.body ={
+        result: {
+          accessToken: user.accessToken,
+        },
         message: '登录成功',
         success: true,
       }
