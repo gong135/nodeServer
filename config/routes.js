@@ -7,6 +7,7 @@ module.exports = function() {
   router.get('/user/get', User.savePhone);
   router.post('/user/getInfo', User.getInfo);
   router.post('/user/signup', User.signup);
+  router.post('/user/login', User.login);
   router.post('/user/update', User.updateUser);
   return router;
 };

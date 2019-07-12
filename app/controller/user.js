@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const { validate } = require('../util/bcrypt');
 const xss = require('xss');
 const uuid = require('uuid');
 
@@ -98,13 +99,28 @@ const Controller = {
     };
   },
   async login(ctx, next) {
+    console.log(1);
     const {userName, password } = ctx.request.body;
     let user = await User.findOne({
       userName,
     }).exec();
     if(!user) {
+      return ctx.body = {
+        message: '用户名不存在',
+        code: 400,
+      }
+    }
+    const isPasswordVaild = validate(password, user.password);
+    if(!isPasswordVaild) {
       ctx.body ={
-        message: '用户不存在',
+        message: '密码不正确',
+        code: 414,
+      }
+      return;
+    } else {
+      ctx.body ={
+        message: '登录成功',
+        success: true,
       }
     }
     await next();
