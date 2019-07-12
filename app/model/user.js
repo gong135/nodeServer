@@ -1,5 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
+const { enbcrypt } = require('../util/bcrypt');
+// const bcrypt = require('bcrypt');
+
 const userSchema = new mongoose.Schema({
   // 电话登录
   userName: {
@@ -8,6 +11,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    set(val) {
+      // return bcrypt.hashSync(val, 10)
+      return enbcrypt(val);
+    },
   },
   phone: {
     type: String,

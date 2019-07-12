@@ -54,6 +54,13 @@ const Controller = {
   },
   async signup(ctx, next) {
     let { userName, password } = ctx.request.body;
+    if(!userName || !password) {
+      ctx.body= {
+        message: '无效登录',
+        code: 424,
+      }
+      return;
+    }
     await next();
     let user = await User.findOne({ userName }).exec(); //这个就是一个 promise exec
     if (!user) {
@@ -72,6 +79,7 @@ const Controller = {
           message: error,
           error: 511,
         };
+        return;
       }
     } else {
       ctx.body = {
@@ -80,6 +88,7 @@ const Controller = {
           error: 510,
         },
       };
+      return;
     }
     ctx.body = {
       result: {
@@ -89,6 +98,15 @@ const Controller = {
     };
   },
   async login(ctx, next) {
+    const {userName, password } = ctx.request.body;
+    let user = await User.findOne({
+      userName,
+    }).exec();
+    if(!user) {
+      ctx.body ={
+        message: '用户不存在',
+      }
+    }
     await next();
   },
 };
