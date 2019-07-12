@@ -3,6 +3,8 @@ const User = mongoose.model('User');
 const { validate } = require('../util/bcrypt');
 const xss = require('xss');
 const uuid = require('uuid');
+const jwt = require('jsonwebtoken');
+const secretKey = 'cun2bi2hui2jiamiRuby';
 
 const Controller = {
   async savePhone(ctx, next) {
@@ -55,11 +57,11 @@ const Controller = {
   },
   async signup(ctx, next) {
     let { userName, password } = ctx.request.body;
-    if(!userName || !password) {
-      ctx.body= {
+    if (!userName || !password) {
+      ctx.body = {
         message: '无效登录',
         code: 424,
-      }
+      };
       return;
     }
     await next();
@@ -100,31 +102,38 @@ const Controller = {
   },
   async login(ctx, next) {
     console.log(1);
-    const {userName, password } = ctx.request.body;
+    const { userName, password } = ctx.request.body;
     let user = await User.findOne({
       userName,
     }).exec();
-    if(!user) {
-      return ctx.body = {
+    if (!user) {
+      return (ctx.body = {
         message: '用户名不存在',
         code: 400,
-      }
+      });
     }
     const isPasswordVaild = validate(password, user.password);
-    if(!isPasswordVaild) {
-      ctx.body ={
+    if (!isPasswordVaild) {
+      ctx.body = {
         message: '密码不正确',
         code: 422,
-      }
+      };
       return;
     } else {
-      ctx.body ={
+      // 生产 token
+      const token = jwt.sign(
+        {
+          _id: String(user._id),
+        },
+        secretKey,
+      ); // 一般处理  第一个用户 id， 第二个加密key , 第三个
+      ctx.body = {
         result: {
           accessToken: user.accessToken,
         },
         message: '登录成功',
         success: true,
-      }
+      };
     }
     await next();
   },
